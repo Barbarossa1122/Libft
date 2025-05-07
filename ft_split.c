@@ -54,7 +54,7 @@ static char	*ft_write_word(char *dest, char const *src, char c, int i)
 		i++;
 		j++;
 	}
-	dest[i] = '\0';
+	dest[j] = '\0';
 	return (dest);
 }
 
@@ -66,9 +66,9 @@ static char	**ft_split_part(char const *s, char c, char **m, int tot_words)
 
 	i = 0;
 	i_matrix = 0;
-	len_word = 0;
 	while (i_matrix < tot_words)
 	{
+		len_word = 0;
 		while (s[i] && s[i] == c)
 			i++;
 		while (s[i] && s[i] != c)
@@ -77,8 +77,11 @@ static char	**ft_split_part(char const *s, char c, char **m, int tot_words)
 			len_word++;
 		}
 		m[i_matrix] = (char *)malloc((len_word + 1) * (sizeof(char)));
-		if (!m)
+		if (!m[i_matrix])
+		{
 			free_array(m, i_matrix);
+			return (NULL);
+		}
 		ft_write_word(m[i_matrix], s, c, (i - (len_word)));
 		len_word = 0;
 		i_matrix++;
@@ -97,7 +100,23 @@ char	**ft_split(char const *s, char c)
 	tot_words = ft_count_words(s, c);
 	matrix = (char **)malloc((tot_words + 1) * sizeof (char *));
 	if (!matrix)
-		return (0);
+		return (NULL);
 	matrix = ft_split_part(s, c, matrix, tot_words);
 	return (matrix);
 }
+
+/*
+int main(void)
+{
+    char *input = "hellocworldccvvvv";
+    char **words = ft_split(input, 'c');
+    int i = 0;
+
+    while (words && words[i])
+    {
+        printf("word[%d]: %s\n", i, words[i]);
+        i++;
+    }
+    return 0;
+}
+*/
